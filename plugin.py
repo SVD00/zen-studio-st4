@@ -1,5 +1,4 @@
 import sublime, sublime_plugin
-import ctypes
 from ctypes import c_char_p, c_void_p, cast, Structure
 from ctypes.wintypes import DWORD, WPARAM
 import win32gui, win32api
@@ -20,7 +19,7 @@ class Plugin:
 		"""
 		Initialize the plugin
 
-		:param view: 			The view that contains the text to send to Zen Studio.
+		:param view:	The view that contains the text to send to Zen Studio.
 		:param message_type:	1 = GpcTab | 2 = BuildAndRun
 		"""
 
@@ -30,11 +29,11 @@ class Plugin:
 		self.text = view.substr(sublime.Region(0, self.view.size()))
 
 	def run(self):
-		# Get the Zen Studio handle
-		hwnd = self.find_zen_studio()
+		# Get the Zen Studio handle(s)
+		hwnd_list = self.find_zen_studio()
 
 		# Convert text to bytes and cast into a pointer
-		cmessage =	c_char_p(self.text.encode())
+		cmessage = c_char_p(self.text.encode())
 		cmessagep = cast(cmessage, c_void_p)
 
 		# Initialize Data Struct
@@ -43,11 +42,10 @@ class Plugin:
 		cds.cbData = len(self.text)
 		cds.lpData = cmessagep
 
-
 		# Send message to all Zen Studio processes
 		# https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessage
-		for handle in hwnd:
-			win32api.SendMessage(handle, WM_COPYDATA, 0, cds)
+		for hwnd in hwnd_list:
+			win32api.SendMessage(hwnd, WM_COPYDATA, 0, cds)
 
 	def find_zen_studio(self):
 		"""
@@ -55,12 +53,13 @@ class Plugin:
 
 		:return: list of handles to open windows that contain the text "Zen Studio"
 		"""
-		
 		list = []
 
+		# Callback function
 		def check_process(hwnd, ctx):
 			if "Zen Studio" in win32gui.GetWindowText(hwnd):
 				list.append(hwnd)
 
+		# Enumerate all windows
 		win32gui.EnumWindows(check_process, None)
 		return list
