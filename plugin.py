@@ -7,7 +7,6 @@ import win32gui, win32api
 ULONG_PTR = WPARAM
 WM_COPYDATA = 0x4A;
 
-
 # https://docs.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-copydatastruct
 class COPYDATASTRUCT(Structure):
 	_fields_ = [
@@ -24,6 +23,7 @@ class Plugin:
 		:param view: 			The view that contains the text to send to Zen Studio.
 		:param message_type:	1 = GpcTab | 2 = BuildAndRun
 		"""
+
 		self.view = view
 		self.type = message_type
 		# Get all text from sublime text view
@@ -49,12 +49,13 @@ class Plugin:
 		for handle in hwnd:
 			win32api.SendMessage(handle, WM_COPYDATA, 0, cds)
 
-	"""
-	Find the zen studio process by enumerating open windows.
-
-	:return: list of handles to open windows that contain the text "Zen Studio"
-	"""
 	def find_zen_studio(self):
+		"""
+		Find the zen studio process by enumerating open windows.
+
+		:return: list of handles to open windows that contain the text "Zen Studio"
+		"""
+		
 		list = []
 
 		def check_process(hwnd, ctx):
