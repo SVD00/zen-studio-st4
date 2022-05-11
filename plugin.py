@@ -19,10 +19,9 @@ class Plugin:
 		"""
 		Initialize the plugin
 
-		:param view:	The view that contains the text to send to Zen Studio.
+		:param view:			The view that contains the text to send to Zen Studio.
 		:param message_type:	1 = GpcTab | 2 = BuildAndRun
 		"""
-
 		self.view = view
 		self.type = message_type
 		# Get all text from sublime text view
@@ -53,6 +52,7 @@ class Plugin:
 
 		:return: list of handles to open windows that contain the text "Zen Studio"
 		"""
+		# list for HWND's
 		list = []
 
 		# Callback function
