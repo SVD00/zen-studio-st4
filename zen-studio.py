@@ -1,5 +1,5 @@
 import sublime, sublime_plugin
-from .Plugin import Plugin
+from .plugin import Plugin
 
 
 # view.run('send_to_studio')
