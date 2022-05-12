@@ -1,8 +1,8 @@
 {
-   "*": {
-      "*": [
+   "windows": {
+      ">=3000": [
          "psutil",
-         "Pywin32"
+         "python-pywin32"
       ]
    }
 }
